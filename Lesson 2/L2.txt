@@ -1,0 +1,68 @@
+Извлечь все столбцы из таблицы Sales.SalesTerritory 
+
+SELECT * FROM Sales.SalesTerritory
+
+
+Извлечь столбцы TerritoryID и Name из таблицы Sales.SalesTerritory
+
+SELECT TerritoryID, Name FROM Sales.SalesTerritory
+
+
+Найдите все данные, которые существует для людей из Person.Person с LastName = ‘Norman’
+
+SELECT * FROM Person.Person
+WHERE LastName = 'Norman'
+
+
+Найдите все строки из Person.Person, где EmailPromotion не равен 2
+
+SELECT * FROM Person.Person
+where EmailPromotion <> 2
+
+
+Какие ещё агрегатные функции существуют в языке T-SQL? Приведите несколько примеров.
+
+COUNT_BIG, VAR (Transact-SQL)
+
+SELECT COUNT_BIG ([StandardCost]) FROM Production.Product
+
+
+
+4/
+a)Сколько уникальных PersonType существует для людей из Person.Person с LastName начинающиеся с буквы М или не содержащий 1 в EmailPromotion.
+
+SELECT COUNT (DISTINCT PersonType) FROM Person.Person
+WHERE LastName LIKE 'M%' OR EmailPromotion <>1
+
+b) Вывести первых 3 специальных предложений из Sales.SpecialOffer с наибольшими DiscountPct, которые начинали действовать с 2013-01-01 по 2014-01-01.
+
+SELECT TOP 3 * FROM Sales.SpecialOffer
+WHERE StartDate >= '2013-01-01' and EndDate <= '2014-01-01'
+ORDER BY  DiscountPct DESC
+
+C) Найти самый минимальный вес и самый максимальный размер продукта из Production.Product.
+
+SELECT MIN (Weight), MAX (Size)  FROM Production.Product
+
+d) Найти самый минимальный вес и самый максимальный размер продукта для каждой подкатегории ProductSubcategoryID из Production.Product. 
+
+SELECT MIN (Weight) AS Weight_MIN, MAX (Size) AS Size_MAX, ProductSubcategoryID  FROM Production.Product
+GROUP BY  ProductSubcategoryID
+
+e) Найти самый минимальный вес и самый максимальный размер продукта для каждой подкатегории ProductSubcategoryID из Production.Product, где цвет продукта определен(Color).
+
+SELECT MIN (Weight) AS Weight_MIN, MAX (Size) AS Size_MAX, ProductSubcategoryID  FROM Production.Product
+WHERE Color ='Color'
+GROUP BY  ProductSubcategoryID
+
+
+
+
+
+
+
+
+
+
+
+
