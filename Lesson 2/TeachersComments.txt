@@ -1,0 +1,10 @@
+Well done!
+
+No negative comments, great job!
+
+
+4.a
+Email Promotion should not INCLUDE (it's not = should not BE EQUAL). 
+
+4.e
+Color is defined means that it should not be equal to NULL:)
