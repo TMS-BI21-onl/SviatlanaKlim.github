@@ -1,0 +1,62 @@
+﻿Проверочная работа 4
+1.	Написать запрос на добавление в таблицу manufacturer нового производителя HP из Америки.
+
+insert into manufacturer (id,name,country_id)
+values (5,'HP',4)
+
+2. Написать запрос, благодаря которому возраст пользователя Андрей в таблице user уменьшится в 3 раза.
+
+UPDATE user
+SET age = age/3
+WHERE name = 'Андрей'
+
+3. Найти название продукта с максимальной ценой.
+
+3/1
+SELECT TOP 1 WITH TIES price, name
+FROM Product
+order by price DESC
+
+3/2
+SELECT name, price
+FROM Product
+WHERE price = (SELECT MAX(price) FROM Product)
+
+3/3
+SELECT *
+FROM
+(SELECT name, price, 
+		RANK() OVER (ORDER BY price DESC) as rnk
+FROM Product) t
+WHERE rnk=1
+
+3/4
+SELECT *
+FROM
+(
+	SELECT name, price, MAX(price) OVER () as max_price
+	FROM Product
+) T
+WHERE price=max_price
+
+
+4. Написать запрос на выборку всех пользователей с телефонами, начинающимися на +3 и заканчивающимися на 4, либо с возрастом > 35.
+
+SELECT u.Name as Name, p.Name as Phone, u.Age
+FROM Phone p  
+LEFT JOIN USER  u ON p.User_id = u.id
+WHERE p.Name LIKE '+3%4' OR u.Age>35
+
+
+
+5. Найти топ 5 пользователей, кто купил больше всего продуктов.
+
+
+SELECT top 5 Count(ID продукта), c.name 
+FROM order s 
+JOIN user c ON s.ID_user = c.ID_user 
+GROUP BY c.name 
+Order by Count(ID продукта) DESC
+
+
+
