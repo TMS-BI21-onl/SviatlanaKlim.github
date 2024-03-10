@@ -1,0 +1,67 @@
+1.	Покажите всех менеджеров, которые имеют в подчинении больше 6-ти сотрудников.
+
+SELECT E.First_Name, E.Last_Name
+FROM Employees E
+JOIN (SELECT manager_id, COUNT(Employee_ID) AS cnt_employees
+FROM Employees
+GROUP BY manager_id
+HAVING COUNT(Employee_ID) > 6) E2
+ON E.Employee_ID = E2.manager_id;
+
+
+2.	Вывести min и max зарплату с вычетом commission_pct для каждого департамента. (commission_pct на базе указывается в процентах). 
+
+SELECT D.DEPARTMENT_NAME,
+       MIN(E.SALARY * (1 - E.COMMISSION_PCT / 100)) AS Min_SalaryDeduct,
+       MAX(E.SALARY * (1 - E.COMMISSION_PCT / 100)) AS Max_SalaryDeduct
+FROM Employees E
+JOIN Departmrnts D ON E.Department_ID = D.Depapartment_ID
+GROUP BY D.DEPARTMENT_NAME;
+
+
+3.	Вывести только регион, где работают больше всего людей.
+
+Select TOP 1 with TIES T.REGIONS_NAME
+FROM (SELECT R.REGIONS_NAME,  COUNT (E.Emploe_ID) AS cnt
+	FROM EMPLOYES E
+	JOIN DEPARTMENTS D ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+	JOIN LOCATIONS L ON L.LOCATION_ID = D.LOCATION_ID
+	JOIN COUNTRIES C ON C.COUNTRY_ID = L.COUNTRY_ID
+	JOIN REGIONS R ON R.REGION_ID = C.REGION_ID
+	GROUP BY R.REGIONS_NAME
+	ORDER BY cnt DESC ) T
+
+
+4.	Найдите разницу в процентах между средней зп по каждому департаменту от общей средней (по всем департаментам).
+
+ SELECT D.DEPARTMENT_NAME, 
+       AVG(E.SALARY) AS department_avg_salary,
+       (AVG (E.SALARY) / (SELECT AVG (E.SALARY) FROM EMPLOYEES E) - 1)*100 AS percentage_difference
+	FROM EMPLOYEE E
+	JOIN DEPARTMENTS D ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+	GROUP BY D.DEPARTMENT_NAME;
+
+
+5.	Найдите людей, кто проработал больше, чем 10 лет в одном департаменте. 
+
+
+SELECT *
+FROM 
+	(SELECT E.First_Name, E.Last_Name,
+		CASE 
+		WHEN J.END_DATE IS NULL THEN DATEDIFF (year ,J.START_DATE, GETDATE())
+		ELSE DATEDIFF (year,J.START_DATE, J.END_DATE)
+		END AS WORK_YEAR
+	FROM JOB_HISTORY J
+	JOIN EMPLOYEES E   ON E.EMPLOYEE_ID = J.EMPLOYEE_ID
+	GROUP BY J.EMPLOYEE_ID, J.DEPARTMENT_ID) T 
+	WHERE WORK_YEAR >10
+
+
+6.	Найдите людей, кто занимает 5-10 место по размеру зарплаты.  
+
+SELECT FIRST_NAME, LAST_NAME
+FROM
+	(SELECT EMPLOYEE_ID, FIRST_NAME, LAST_NAME, SALARY, ROW_NUMBER() OVER (ORDER BY salary DESC) AS PN
+	FROM EMPLOYEES
+	WHERE PN BETWEEN 5 AND 10;
